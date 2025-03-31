@@ -1,0 +1,31 @@
+{
+  "name": "contact-form-backend",
+  "version": "1.0.0",
+  "description": "Backend for Eduzone contact form",
+  "main": "server.jsx",
+  "scripts": {
+    "start": "node server.jsx",
+    "dev": "nodemon server.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "contact",
+    "form",
+    "backend",
+    "eduzone"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^6.15.0",
+    "mongoose": "^6.2.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
