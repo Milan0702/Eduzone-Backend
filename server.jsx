@@ -8,42 +8,52 @@ const jwt = require('jsonwebtoken');
 // Load environment variables
 dotenv.config();
 
+// Set mongoose options
+mongoose.set('strictQuery', false); // Fix deprecation warning
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 // Connect to MongoDB with better error handling and retry logic
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-  family: 4 // Use IPv4, skip trying IPv6
-})
-.then(() => console.log('MongoDB Atlas connection successful'))
-.catch(err => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1); // Exit with failure
-});
-
-// Handle MongoDB connection errors after initial connection
-mongoose.connection.on('error', err => {
-  console.error('MongoDB connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected. Attempting to reconnect...');
-  setTimeout(() => {
-    mongoose.connect(MONGODB_URI, {
+const connectDB = async () => {
+  try {
+    console.log('Attempting to connect to MongoDB...');
+    console.log('Connection string:', MONGODB_URI.replace(/\/\/[^@]+@/, '//****:****@')); // Hide credentials in logs
+    
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
       family: 4
     });
-  }, 5000); // Retry connection after 5 seconds
+    
+    console.log('MongoDB Atlas connection successful');
+  } catch (error) {
+    console.error('MongoDB connection error:', error.message);
+    console.error('Error details:', {
+      name: error.name,
+      code: error.code,
+      codeName: error.codeName
+    });
+    process.exit(1);
+  }
+};
+
+// Handle MongoDB connection errors after initial connection
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err.message);
 });
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected. Attempting to reconnect...');
+  setTimeout(connectDB, 5000);
+});
+
+// Initialize database connection
+connectDB();
 
 // Define Schemas
 // Contact schema
