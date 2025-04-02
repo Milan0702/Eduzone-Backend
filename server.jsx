@@ -102,17 +102,20 @@ const User = mongoose.model('User', userSchema);
 // Middleware
 app.use(express.json());
 
-// Configure CORS
-app.use(cors({
-  origin: ['https://eduzone-nu.vercel.app', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
-
-// Add preflight OPTIONS handler for all routes
-app.options('*', cors());
+// CORS middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://eduzone-nu.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 // Authentication middleware
 const authMiddleware = (req, res, next) => {
