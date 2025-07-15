@@ -103,22 +103,23 @@ const User = mongoose.model('User', userSchema);
 app.use(express.json());
 
 // CORS middleware
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.CORS_ALLOWED_ORIGIN,
+  'http://localhost:3000'
+].filter(Boolean);
+
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://eduzone-nu.vercel.app', 'http://localhost:3000'];
   const origin = req.headers.origin;
-  
   if (allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
   }
-  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
-  
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
   next();
 });
 
