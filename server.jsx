@@ -21,7 +21,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.CORS_ALLOWED_ORIGIN,
   'http://localhost:3000',
-  'https://eduzone-nu.vercel.app/' // <-- Actual deployed frontend URL
+  'https://eduzone-nu.vercel.app' // <-- Actual deployed frontend URL
 ].filter(Boolean);
 
 console.log('Allowed Origins:', allowedOrigins);
