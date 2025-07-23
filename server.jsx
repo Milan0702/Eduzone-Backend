@@ -20,7 +20,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 const allowedOrigins = [
   process.env.CLIENT_URL,
   process.env.CORS_ALLOWED_ORIGIN,
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://eduzone-frontend.vercel.app' // <-- Actual deployed frontend URL
 ].filter(Boolean);
 
 console.log('Allowed Origins:', allowedOrigins);
